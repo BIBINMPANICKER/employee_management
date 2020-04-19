@@ -308,19 +308,21 @@ class _AddEmployeeState extends State<AddEmployee> {
       _cityController.text = widget.teamMemberModel.city;
       _isSwitched = widget.teamMemberModel.teamLead == null;
     }
+    //fetching all team lead to show in dropdown on employee add/edit
     DbFactory().employeeDb.getAllTeamLead().then((onValue) {
       dropdownList = onValue;
       DbFactory().teamDb.getTeams().then((teamList) {
         setState(() {
           data = teamList;
           if (action == Constants.EDIT) {
+
+            //avoid showing himself in team lead dropdown while editing an employee
             dropdownList
                 .removeWhere((obj) => obj.id == widget.teamMemberModel.id);
 
             dropdownList.forEach((f) {
               if (f.id == widget.teamMemberModel.teamLeadId) {
                 selectedTeamLead = f;
-                print(f.id);
               }
             });
             widget.teamMemberModel.teamName.split(',').forEach((f) {
